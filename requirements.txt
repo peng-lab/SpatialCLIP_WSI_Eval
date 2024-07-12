@@ -1,0 +1,21 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+numpy=1.26.0
+h5py
+pandas
+Pillow
+opencv
+tqdm
+pytorch
+torchvision
+pytorch-lightning
+ftfy
+iopath
+einops
+regex
+matplotlib
+transformers
+timm
+
+# include pip install slideio

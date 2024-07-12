@@ -2,6 +2,14 @@
 
 ## Models:
 
+### UNI
+
+- Trained on: 224x224 pixels @ 20x Mass-100K
+- Weights: Found at [HuggingFace](https://huggingface.co/MahmoodLab/UNI)
+- Paper: [Link to paper](https://www.nature.com/articles/s41591-024-02857-3)
+- Repository: [GitHub Link](https://github.com/mahmoodlab/uni)
+
+
 ### CTransPath
 
 - Trained on: 224x224 pixels @ ?
@@ -46,23 +54,16 @@
 - Paper: [Link to paper](https://ai.facebook.com/research/publications/segment-anything/)
 - Repository: [GitHub link](https://github.com/facebookresearch/segment-anything)
 
-### UNI
-
-- Trained on: 224x224 pixels @ 20x Mass-100K
-- Weights: Found at [HuggingFace](https://huggingface.co/MahmoodLab/UNI)
-- Paper: [Link to paper](https://www.nature.com/articles/s41591-024-02857-3)
-- Repository: [GitHub Link](https://github.com/mahmoodlab/uni)
-
 ## Setup
 
 To set up the environment, follow these steps:
 
-1. Create your conda environment:
-   ``conda create --name feature_ex python=3.9``
+1. Create your conda environment with dependencies:
+   ``conda create -n feature_ex --file requirements.txt``
 2. Actiate your conda environment
    ``conda activate feature_ex``
-3. Install all dependencies:
-   ``pip install -r requirements.txt``
+3. Install slideio (not available on conda):
+   ``pip install slideio``
 
 ## Usage
 
@@ -73,7 +74,7 @@ python feature_extraction_new.py
 	--slide_path /path/to/slides \ 
 	--save_path /path/to/save \ 
 	--file_extension .czi \  
-	--models kimianet \ 
+	--models uni \ 
 	--save_patch_images \ 
 	--patch_size 256 \ 
 	--invalid_ratio_thresh 0.5 \ 
@@ -91,7 +92,7 @@ python feature_extraction_new.py
 	--slide_path /path/to/slides \ 
 	--save_path /path/to/save \ 
 	--file_extension .tif \ 
-	--models ctranspath \ 
+	--models uni \ 
 	--batch_size 1024 \ 
 	--patch_imgs
 ```
