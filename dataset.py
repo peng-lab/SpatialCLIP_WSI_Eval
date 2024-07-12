@@ -28,3 +28,19 @@ class SlideDataset(Dataset):
         return img
 
 
+class PatchDataset(Dataset):
+    def __init__(self, image_paths, transform:list =None):
+        super(PatchDataset, self).__init__()
+        self.image_paths = image_paths
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        img = Image.open(self.image_paths[idx])
+
+        if self.transform:
+            img = self.transform(img)
+
+        return img

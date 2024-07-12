@@ -10,22 +10,16 @@ import slideio
 import torch
 from PIL import Image
 
-# new imports
-import h5py, json
-from torch.utils.data import Dataset
-
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import math
-from torchvision import transforms
 
-
-from dataset import SlideDataset
+from dataset import SlideDataset, PatchDataset
 from models.model import get_models
 from models.histaugan.model import HistAuGAN
 from models.histaugan.augment import augment
 from utils.utils import (bgr_format, get_driver, get_scaling, save_hdf5,
-                         save_qupath_annotation, save_tile_preview, threshold)
+                         save_qupath_annotation, save_tile_preview, threshold, save_patch_to_hdf5)
 
 parser = argparse.ArgumentParser(description="Feature extraction")
 
@@ -594,72 +588,6 @@ def patch_files_to_feature(
                 data_l.set_postfix_str(f'extract features for: {patch_class}')
 
     return feats, feats_aug
-
-
-##########################################################################
-# new dataset to make def patch_files_to_feature more efficiently
-# dataset takes multiple image paths instead of 1 wsi
-##########################################################################
-
-class PatchDataset(Dataset):
-    def __init__(self, image_paths, transform:list =None):
-        super(PatchDataset, self).__init__()
-        self.image_paths = image_paths
-        self.transform = transform
-
-    def __len__(self):
-        return len(self.image_paths)
-
-    def __getitem__(self, idx):
-        img = Image.open(self.image_paths[idx])
-
-        if self.transform:
-            img = self.transform(img)
-
-        return img
-
-
-
-##########################################################################################
-# new save function for patches per class
-##########################################################################################
-
-def save_patch_to_hdf5(args: argparse.Namespace, patch_class: str, file_names: list, feats: dict, feats_aug: dict):
-    """
-    Save the extracted features and coordinates to an HDF5 file.
-
-    Args:
-        args (argparse.Namespace): Arguments containing various processing parameters.
-        patch_class (str): Class of the patch files.
-        file_names (list): List of all patch image file names the features were extracted from
-        feats (dict): dictionary: modelname: extracted features
-        feats_aug (dict): dictionary: modelname: extracted features with patch-level augmentations
-    Returns:
-        None
-    """
-    for model_name, features in feats.items():
-        if len(features) > 0:
-            with h5py.File(
-                Path(args.save_path)
-                / "h5_files"
-                / f"{patch_class}.h5",
-                "w",
-            ) as f:
-                f["patch_file"] = file_names
-                f["feats"] = features
-                if feats_aug is not None:
-                    f["feats_aug"] = feats_aug[model_name]
-                f["args"] = json.dumps(vars(args))
-                f["model_name"] = model_name
-            
-        else:
-            print(
-                "WARNING, no features extracted for",
-                patch_class,
-                "reason could be poor patch quality.",
-            )
-
-
 
 
 if __name__ == "__main__":
