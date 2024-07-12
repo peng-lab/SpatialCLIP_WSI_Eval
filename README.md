@@ -49,7 +49,7 @@
 ### UNI
 
 - Trained on: 224x224 pixels @ 20x Mass-100K
-- Weights: Found at [HuggingFace] (https://huggingface.co/MahmoodLab/UNI)
+- Weights: Found at [HuggingFace](https://huggingface.co/MahmoodLab/UNI)
 - Paper: [Link to paper](https://www.nature.com/articles/s41591-024-02857-3)
 - Repository: [GitHub Link](https://github.com/mahmoodlab/uni)
 
