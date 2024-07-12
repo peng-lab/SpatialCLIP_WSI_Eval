@@ -9,17 +9,19 @@ from models.resnet_retccl import resnet50 as retccl_res50
 from models.simsalabim import ResNetSimCLR
 from models.sam import build_sam_vit_h,build_sam_vit_b,build_sam_vit_l
 from models.imagebind import imagebind_huge
+from models.uni  import uni
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
 
 # RetCCL can be downloaded here: https://drive.google.com/drive/folders/1AhstAFVqtTqxeS9WlBpU41BV08LYFUnL?usp=sharing
 # kimianet download: https://kimialab.uwaterloo.ca/kimia/?smd_process_download=1&download_id=4216
 RETCCL_PATH = '/home/ubuntu/run/retccl.pth'
-CTRANSPATH_PATH = '/lustre/groups/shared/users/peng_marr/pretrained_models/ctranspath.pth'
+CTRANSPATH_PATH = '/mnt/volume/mathias/pretrained_models/ctranspath.pth'
 KIMIANET_PATH = '/mnt/volume/models/KimiaNetPyTorchWeights.pth'
 SIMCLR_LUNG_PATH= '/mnt/volume/models/rushinssimclr.pth' 
 SAM_VIT_H_PATH='/mnt/ceph_vol/models/sam_vit_h_4b8939.pth'
 SAM_VIT_L_PATH="/mnt/ceph_vol/models/sam_vit_l_0b3195.pth"
 SAM_VIT_B_PATH="/mnt/ceph_vol/models/sam_vit_b_01ec64.pth"
+UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/pytorch_model.bin'
 
 def get_models(modelnames):
     models = []
@@ -48,6 +50,8 @@ def get_models(modelnames):
             model=get_imagebind()
         elif modelname.lower()=='beit_fb':
             model = BeitModel(device)
+        elif modelname.lower()=='uni':
+            model = get_uni()
         """
         # torch.compile does not work with DataParallel
         if torch.cuda.device_count() > 1:
@@ -63,6 +67,13 @@ def get_models(modelnames):
         models.append({'name': modelname, 'model': 
             model.to(device), 'transforms': transforms})
     return models
+
+
+def get_uni():
+    model = uni()
+    pretrained = torch.load(UNI_VIT_L_PATH)
+    model.load_state_dict(pretrained, strict=True)
+    return model
 
 
 def get_sam_vit_h():
@@ -125,7 +136,7 @@ def get_transforms(model_name):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
 
-    if model_name.lower() in ['ctranspath', 'resnet50',"simclr_lung", 'beit_fb']:
+    if model_name.lower() in ['ctranspath', 'resnet50',"simclr_lung", 'beit_fb', 'uni']:
         resolution = 224
     elif model_name.lower() == 'retccl':
         resolution = 256

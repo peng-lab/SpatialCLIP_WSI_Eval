@@ -46,6 +46,13 @@
 - Paper: [Link to paper](https://ai.facebook.com/research/publications/segment-anything/)
 - Repository: [GitHub link](https://github.com/facebookresearch/segment-anything)
 
+### UNI
+
+- Trained on: 224x224 pixels @ 20x Mass-100K
+- Weights: Found at [HuggingFace] (https://huggingface.co/MahmoodLab/UNI)
+- Paper: [Link to paper](https://www.nature.com/articles/s41591-024-02857-3)
+- Repository: [GitHub Link](https://github.com/mahmoodlab/uni)
+
 ## Setup
 
 To set up the environment, follow these steps:
@@ -62,7 +69,7 @@ To set up the environment, follow these steps:
 To start feature extraction, change the model paths in `model/model.py` to where you stored the weights, and then call the feature extraction script `feature_extraction.py` in the command line as follows:
 
 ```bash
-python feature_extraction.py
+python feature_extraction_new.py
 	--slide_path /path/to/slides \ 
 	--save_path /path/to/save \ 
 	--file_extension .czi \  
@@ -75,6 +82,18 @@ python feature_extraction.py
 	--downscaling_factor 8 \ 
 	-save_tile_preview True \ 
 	--preview_size 4096
+```
+
+To extract features from patch images instead of WSI use:
+
+```bash
+python feature_extraction_new.py
+	--slide_path /path/to/slides \ 
+	--save_path /path/to/save \ 
+	--file_extension .tif \ 
+	--models ctranspath \ 
+	--batch_size 1024 \ 
+	--patch_imgs
 ```
 
 ## Continue extraction
