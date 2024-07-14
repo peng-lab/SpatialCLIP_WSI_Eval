@@ -63,7 +63,7 @@ To set up the environment, follow these steps:
 	
 	you can change the environment name by editing the name tag in the environment.yml file or use the ``-n <environment_name>`` flag
 
-2. Actiate your conda environment
+2. Activate your conda environment
 	``conda activate feature_ex``
 
 ## Usage
@@ -81,8 +81,8 @@ python feature_extraction_new.py
 	--invalid_ratio_thresh 0.5 \ 
 	--edge_threshold 4 \ 
 	--resolution_in_mpp 0 \ 
-	--downscaling_factor 8 \ 
-	-save_tile_preview True \ 
+	--downscaling_factor 2 \ 
+	-save_tile_preview \ 
 	--preview_size 4096
 ```
 
@@ -94,7 +94,7 @@ python feature_extraction_new.py
 	--save_path /path/to/save \ 
 	--file_extension .tif \ 
 	--models uni \ 
-	--batch_size 1024 \ 
+	--batch_size 512 \ 
 	--patch_imgs
 ```
 
