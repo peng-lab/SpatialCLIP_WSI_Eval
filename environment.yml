@@ -1,0 +1,25 @@
+name: feature_ex
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - pip
+  - numpy=1.26.0
+  - h5py
+  - pandas
+  - Pillow
+  - opencv
+  - tqdm
+  - pytorch
+  - torchvision
+  - pytorch-lightning
+  - ftfy
+  - iopath
+  - einops
+  - regex
+  - matplotlib
+  - transformers
+  - timm
+
+  - pip:
+    - slideio

@@ -59,11 +59,12 @@
 To set up the environment, follow these steps:
 
 1. Create your conda environment with dependencies:
-   ``conda create -n feature_ex --file requirements.txt``
+   ``conda create --file environment.yml``
+	
+	you can change the environment name by editing the name tag in the environment.yml file or use the ``-n <environment_name>`` flag
+
 2. Actiate your conda environment
-   ``conda activate feature_ex``
-3. Install slideio (not available on conda):
-   ``pip install slideio``
+	``conda activate feature_ex``
 
 ## Usage
 
