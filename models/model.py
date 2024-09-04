@@ -11,6 +11,8 @@ from models.sam import build_sam_vit_h,build_sam_vit_b,build_sam_vit_l
 from models.imagebind import imagebind_huge
 from models.uni  import uni
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
+from collections import OrderedDict
+
 
 # RetCCL can be downloaded here: https://drive.google.com/drive/folders/1AhstAFVqtTqxeS9WlBpU41BV08LYFUnL?usp=sharing
 # kimianet download: https://kimialab.uwaterloo.ca/kimia/?smd_process_download=1&download_id=4216
@@ -22,6 +24,7 @@ SAM_VIT_H_PATH='/mnt/ceph_vol/models/sam_vit_h_4b8939.pth'
 SAM_VIT_L_PATH="/mnt/ceph_vol/models/sam_vit_l_0b3195.pth"
 SAM_VIT_B_PATH="/mnt/ceph_vol/models/sam_vit_b_01ec64.pth"
 UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/pytorch_model.bin'
+UNI_CELL_VIT_L_PATH='/mnt/volume/mathias/outputs/test_dino_output/checkpoint.pth'
 
 def get_models(modelnames):
     models = []
@@ -52,6 +55,8 @@ def get_models(modelnames):
             model = BeitModel(device)
         elif modelname.lower()=='uni':
             model = get_uni()
+        elif modelname.lower()=='uni_cell':
+            model = get_uni_cell()
         """
         # torch.compile does not work with DataParallel
         if torch.cuda.device_count() > 1:
@@ -68,13 +73,25 @@ def get_models(modelnames):
             model.to(device), 'transforms': transforms})
     return models
 
+def get_uni_cell():
+    model = uni()
+    checkpoint = torch.load(UNI_CELL_VIT_L_PATH)
+    pretrained = checkpoint['student']
+    
+    # this fix since dino saves the model using 'module.model.backbone' as prefix for every key
+    new_state_dict = OrderedDict()
+    for k, v in pretrained.items():
+        new_key = k.replace('module.model.backbone.', '')  # Remove the prefix
+        new_state_dict[new_key] = v
+    
+    model.load_state_dict(new_state_dict, strict=True)
+    return model
 
 def get_uni():
     model = uni()
     pretrained = torch.load(UNI_VIT_L_PATH)
     model.load_state_dict(pretrained, strict=True)
     return model
-
 
 def get_sam_vit_h():
     return build_sam_vit_h(SAM_VIT_H_PATH)
