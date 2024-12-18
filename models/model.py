@@ -84,7 +84,7 @@ def get_uni_cell():
         new_key = k.replace('module.model.backbone.', '')  # Remove the prefix
         new_state_dict[new_key] = v
     
-    model.load_state_dict(new_state_dict, strict=True)
+    model.load_state_dict(new_state_dict, strict=False)
     return model
 
 def get_uni():
@@ -153,7 +153,7 @@ def get_transforms(model_name):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
 
-    if model_name.lower() in ['ctranspath', 'resnet50',"simclr_lung", 'beit_fb', 'uni']:
+    if model_name.lower() in ['ctranspath', 'resnet50',"simclr_lung", 'beit_fb', 'uni', 'uni_cell']:
         resolution = 224
     elif model_name.lower() == 'retccl':
         resolution = 256
