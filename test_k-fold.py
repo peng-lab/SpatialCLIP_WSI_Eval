@@ -119,6 +119,10 @@ def main(cfg):
                 pin_memory=True
             )
 
+        if cfg.task == 'binary':
+            num_pos = sum([test_dataset[i][2] for i in range(len(test_dataset))])
+            cfg.pos_weight = torch.Tensor((len(test_dataset) - num_pos) / num_pos)
+
         # --------------------------------------------------------
         # model
         # --------------------------------------------------------

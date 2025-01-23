@@ -197,7 +197,7 @@ def get_multi_cohort_df(
         for cohort in cohorts:
             clini_table = Path(data_config[cohort]['clini_table'])
             slide_csv = Path(data_config[cohort]['slide_csv'])
-            feature_dir = Path(data_config[cohort]['feature_dir'][norm][feats])
+            feature_dir = Path(data_config[cohort]['feature_dir'][feats])
 
             current_df = get_cohort_df(
                 clini_table, slide_csv, feature_dir, target_labels, label_dict, cohort, clini_info

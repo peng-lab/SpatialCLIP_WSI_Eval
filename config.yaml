@@ -1,37 +1,51 @@
 # logging options
-save_dir: </path/to/logging/dir>
-project: <project_name>
-name: debug
+save_dir: .logs/spatialCLIP
+project: spatialCLIP
+name: null
 
 # task definition
 data_config: data_config.yaml
-task: <binary/multiclass/multilabel>
-target: <target>
-num_classes: <int>
-cohorts: ["<cohort_name1>", "<cohort_name2>"]
-ext_cohorts: ["<external_cohort_name>"]
+task: binary
+target: isMSIH
+num_classes: 1
+cohorts: [TCGA-CRC]
+ext_cohorts: []
 clini_info: {}
 seed: null
 label_dict:
-  <class_0>: 0
-  <class_1>: 1
+  Not mut.: 0
+  Mutat.: 1
+  nonMSIH: 0
+  MSIH: 1
+  WT: 0
+  MUT: 1
+  wt: 0
+  MT: 1
+  # clinical information
+  left: 1
+  right: 0
+  female: 1
+  male: 0
 
 # model options
-model: <Transformer/TransMIL/AttentionMIL/...>
-model_config: null
-norm: <normalizatio_used>
-feats: <feature_extractor_used>
-input_dim: <feature_dim>
+model: Transformer
+model_config:
+  heads: 8
+  dim_head: 64
+  dim: 512
+  mlp_dim: 512
+norm: raw
+feats: ctranspath
+input_dim: 768
 num_tiles: -1
 pad_tiles: false
 
 # training options
 folds: 5
-num_epochs: 1
-criterion: <BCEWithLogitsLoss/CrossEntropyLoss/...>
-optimizer: <AdamW/Adam/...>
+num_epochs: 8
+criterion:  BCEWithLogitsLoss 
+optimizer: AdamW
 lr_scheduler: null
-lr_scheduler_config: null
 lr: 2.0e-05
 wd: 2.0e-05
 bs: 1
