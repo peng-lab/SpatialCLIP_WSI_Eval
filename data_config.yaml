@@ -1,7 +1,0 @@
-TCGA-CRC:
-  clini_table: /lustre/groups/peng/datasets/histology_data/clini_tables/TCGA-CRC-DX_CLINI.xlsx
-  slide_csv: /lustre/groups/peng/datasets/histology_data/clini_tables/TCGA-CRC-DX_SLIDE.csv
-  feature_dir:
-    normalization: raw
-    ctranspath: /lustre/groups/peng/datasets/histology_data/TCGA-CRC/features/Raw/CTransPath
-  folds: folds/TCGA-CRC

@@ -113,9 +113,10 @@ def save_results(cfg, results, base_path, train_cohorts, test_cohorts, mode="tes
     results_df.to_csv(base_path / f'results_{mode}_{cfg.logging_name}.csv', sep=',', index=False)
 
 
-# test get_model function for all models
-get_model('Transformer', num_classes=4, input_dim=512)
-get_model('AttentionMIL', num_classes=4, input_dim=512)
-# get_model('LAMIL', num_classes=4, input_dim=512)
-get_model('Perceiver', num_classes=4, input_dim=512)
-get_model('TransMIL', num_classes=4, input_dim=512)
+if __name__ == '__main__':
+    # test get_model function for all models
+    get_model('Transformer', num_classes=4, input_dim=512)
+    get_model('AttentionMIL', num_classes=4, input_dim=512)
+    # get_model('LAMIL', num_classes=4, input_dim=512)
+    get_model('Perceiver', num_classes=4, input_dim=512)
+    get_model('TransMIL', num_classes=4, input_dim=512)

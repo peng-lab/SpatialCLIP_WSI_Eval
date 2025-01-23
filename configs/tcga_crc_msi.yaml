@@ -1,5 +1,5 @@
 # logging options
-save_dir: .logs/spatialCLIP
+save_dir: logs/spatialCLIP
 project: spatialCLIP
 name: null
 
@@ -9,7 +9,7 @@ task: binary
 target: isMSIH
 num_classes: 1
 cohorts: [TCGA-CRC]
-ext_cohorts: []
+ext_cohorts: [CPTAC-CRC]
 clini_info: {}
 seed: null
 label_dict:
