@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision import transforms
+from pathlib import Path
 
 from torchvision.models import resnet
 from models.ctran import ctranspath
@@ -12,6 +13,7 @@ from models.imagebind import imagebind_huge
 from models.uni  import uni
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
 from collections import OrderedDict
+from models.clip_img_encoders import clip_models
 
 
 # RetCCL can be downloaded here: https://drive.google.com/drive/folders/1AhstAFVqtTqxeS9WlBpU41BV08LYFUnL?usp=sharing
@@ -24,7 +26,19 @@ SAM_VIT_H_PATH='/mnt/ceph_vol/models/sam_vit_h_4b8939.pth'
 SAM_VIT_L_PATH="/mnt/ceph_vol/models/sam_vit_l_0b3195.pth"
 SAM_VIT_B_PATH="/mnt/ceph_vol/models/sam_vit_b_01ec64.pth"
 UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/pytorch_model.bin'
-UNI_CELL_VIT_L_PATH='/mnt/volume/mathias/outputs/test_dino_output/checkpoint.pth'
+CLIP_CKPTS_PATH = {
+    'densenet':'',
+    'uni-niche':'',
+    'uni-drvi':'',
+    'uni-uce':'/lustre/groups/shared/users/SpatialCLIP/results/clip_pretrain/uni-uce-clip/checkpoints/last.ckpt',
+    'ctrans-niche':'',
+    'ctrans-drvi':'',
+    'ctrans-uce':'',
+    'optimus-niche': '',
+    'optimus-drvi':'',
+    'optimus-uce':'',
+}
+
 
 def get_models(modelnames):
     models = []
@@ -55,8 +69,10 @@ def get_models(modelnames):
             model = BeitModel(device)
         elif modelname.lower()=='uni':
             model = get_uni()
-        elif modelname.lower()=='uni_cell':
-            model = get_uni_cell()
+        # elif modelname.lower()=='uni_cell':
+        #     model = get_uni_cell()
+        elif modelname.lower() in CLIP_CKPTS_PATH.keys():
+            model = clip_models(modelname, ckpt_path=Path(CLIP_CKPTS_PATH[modelname]))
         """
         # torch.compile does not work with DataParallel
         if torch.cuda.device_count() > 1:
@@ -73,19 +89,19 @@ def get_models(modelnames):
             model.to(device), 'transforms': transforms})
     return models
 
-def get_uni_cell():
-    model = uni()
-    checkpoint = torch.load(UNI_CELL_VIT_L_PATH)
-    pretrained = checkpoint['student']
+# def get_uni_cell():
+#     model = uni()
+#     checkpoint = torch.load(UNI_CELL_VIT_L_PATH)
+#     pretrained = checkpoint['student']
     
-    # this fix since dino saves the model using 'module.model.backbone' as prefix for every key
-    new_state_dict = OrderedDict()
-    for k, v in pretrained.items():
-        new_key = k.replace('module.model.backbone.', '')  # Remove the prefix
-        new_state_dict[new_key] = v
+#     # this fix since dino saves the model using 'module.model.backbone' as prefix for every key
+#     new_state_dict = OrderedDict()
+#     for k, v in pretrained.items():
+#         new_key = k.replace('module.model.backbone.', '')  # Remove the prefix
+#         new_state_dict[new_key] = v
     
-    model.load_state_dict(new_state_dict, strict=False)
-    return model
+#     model.load_state_dict(new_state_dict, strict=False)
+#     return model
 
 def get_uni():
     model = uni()
@@ -153,7 +169,7 @@ def get_transforms(model_name):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
 
-    if model_name.lower() in ['ctranspath', 'resnet50',"simclr_lung", 'beit_fb', 'uni', 'uni_cell']:
+    if model_name.lower() in ['ctranspath', 'resnet50', 'simclr_lung', 'beit_fb', 'uni', 'densenet', 'uni-niche', 'uni-drvi', 'uni-uce', 'ctrans-niche', 'ctrans-drvi', 'ctrans-uce']:
         resolution = 224
     elif model_name.lower() == 'retccl':
         resolution = 256
@@ -170,6 +186,10 @@ def get_transforms(model_name):
         resolution = 1024
         mean=(123.675, 116.28, 103.53)
         std=(58.395, 57.12, 57.375)
+    elif 'optimus' in model_name.lower():
+        resolution = 224
+        mean=(0.707223, 0.578729, 0.703617)
+        std=(0.211883, 0.230117, 0.177517)
     else:
         raise ValueError('Model name not found')
 
