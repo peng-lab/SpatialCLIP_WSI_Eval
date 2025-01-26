@@ -14,7 +14,7 @@ from models.uni  import uni
 from models.optimus import optimus
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
 from collections import OrderedDict
-#from models.clip_img_encoders import clip_models
+from models.clip_img_encoders import clip_models
 
 
 # RetCCL can be downloaded here: https://drive.google.com/drive/folders/1AhstAFVqtTqxeS9WlBpU41BV08LYFUnL?usp=sharing
@@ -76,8 +76,8 @@ def get_models(modelnames):
         # elif modelname.lower()=='uni_cell':
         #     model = get_uni_cell()
         elif modelname.lower() in CLIP_CKPTS_PATH.keys():
-            #model = clip_models(modelname, ckpt_path=Path(CLIP_CKPTS_PATH[modelname]))
-            model = None
+            model = clip_models(modelname, ckpt_path=Path(CLIP_CKPTS_PATH[modelname]))
+            #model = None
         """
         # torch.compile does not work with DataParallel
         if torch.cuda.device_count() > 1:
