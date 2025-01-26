@@ -293,7 +293,7 @@ def save_hdf5(args: argparse.Namespace, slide_name:str , coords: pd.DataFrame, f
                 "reason could be poor slide quality.",
             )
 
-def save_patch_to_hdf5(args: argparse.Namespace, patch_class: str, file_names: list, feats: dict, feats_aug: dict):
+def save_patch_to_hdf5(args: argparse.Namespace, slide: str, file_names: list, feats: dict, feats_aug: dict):
     """
     Save the extracted features and coordinates to an HDF5 file.
 
@@ -311,10 +311,10 @@ def save_patch_to_hdf5(args: argparse.Namespace, patch_class: str, file_names: l
             with h5py.File(
                 Path(args.save_path)
                 / "h5_files"
-                / f"{patch_class}.h5",
+                / f"{slide}.h5",
                 "w",
             ) as f:
-                f["patch_file"] = file_names
+                f["file_name"] = file_names
                 f["feats"] = features
                 if feats_aug is not None:
                     f["feats_aug"] = feats_aug[model_name]
@@ -324,6 +324,6 @@ def save_patch_to_hdf5(args: argparse.Namespace, patch_class: str, file_names: l
         else:
             print(
                 "WARNING, no features extracted for",
-                patch_class,
+                slide,
                 "reason could be poor patch quality.",
             )

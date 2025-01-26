@@ -507,24 +507,24 @@ def extract_features_from_patches(
 
     # divide file_paths list into dictionary: keys=classes : value=list of image_paths
     # dataloader can create larger batches of patches and easier saving .h5
-    class_dict = {}
+    slide_dict = {}
     for file_path in file_paths:
-        class_name = file_path.parts[-2]
+        slide_name = file_path.parts[-3].split("_")[0]
 
-        if class_name not in class_dict:
-            class_dict[class_name] = []  
+        if slide_name not in slide_dict:
+            slide_dict[slide_name] = []
 
-        class_dict[class_name].append(file_path)
+        slide_dict[slide_name].append(file_path)
 
     # extract features for each class
     feats, feats_aug = None, None
-    for patch_class, img_paths in class_dict.items():
+    for slide_name, img_paths in slide_dict.items():
 
         if len(model_dicts)>0:
-            feats, feats_aug = patch_files_to_feature(img_paths, patch_class, model_dicts, device, histaugan)
+            feats, feats_aug = patch_files_to_feature(img_paths, slide_name, model_dicts, device, histaugan)
 
-        file_names = [path.stem for path in img_paths]
-        save_patch_to_hdf5(args, patch_class, file_names, feats, feats_aug)
+        file_names = [path.name for path in img_paths]
+        save_patch_to_hdf5(args, slide_name, file_names, feats, feats_aug)
 
 
 ##############################################################################################

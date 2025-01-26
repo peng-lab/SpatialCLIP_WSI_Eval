@@ -9,7 +9,7 @@ from models.kimianet import load_kimianet
 from models.resnet_retccl import resnet50 as retccl_res50
 from models.simsalabim import ResNetSimCLR
 from models.sam import build_sam_vit_h,build_sam_vit_b,build_sam_vit_l
-from models.imagebind import imagebind_huge
+#from models.imagebind import imagebind_huge
 from models.uni  import uni
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
 from collections import OrderedDict
@@ -25,7 +25,7 @@ SIMCLR_LUNG_PATH= '/mnt/volume/models/rushinssimclr.pth'
 SAM_VIT_H_PATH='/mnt/ceph_vol/models/sam_vit_h_4b8939.pth'
 SAM_VIT_L_PATH="/mnt/ceph_vol/models/sam_vit_l_0b3195.pth"
 SAM_VIT_B_PATH="/mnt/ceph_vol/models/sam_vit_b_01ec64.pth"
-UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/pytorch_model.bin'
+UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/UNI.bin'
 CLIP_CKPTS_PATH = {
     'densenet':'',
     'uni-niche':'',
@@ -158,7 +158,8 @@ def get_res50():
     return model
 
 def get_imagebind(pretrained=True):
-    model = imagebind_huge(pretrained=pretrained)
+    #model = imagebind_huge(pretrained=pretrained)
+    model = None
     return model
 
 def multiply_by_255(img):
