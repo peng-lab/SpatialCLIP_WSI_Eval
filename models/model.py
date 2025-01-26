@@ -11,9 +11,10 @@ from models.simsalabim import ResNetSimCLR
 from models.sam import build_sam_vit_h,build_sam_vit_b,build_sam_vit_l
 #from models.imagebind import imagebind_huge
 from models.uni  import uni
+from models.optimus import optimus
 from transformers import Data2VecVisionModel, BeitFeatureExtractor
 from collections import OrderedDict
-from models.clip_img_encoders import clip_models
+#from models.clip_img_encoders import clip_models
 
 
 # RetCCL can be downloaded here: https://drive.google.com/drive/folders/1AhstAFVqtTqxeS9WlBpU41BV08LYFUnL?usp=sharing
@@ -26,6 +27,7 @@ SAM_VIT_H_PATH='/mnt/ceph_vol/models/sam_vit_h_4b8939.pth'
 SAM_VIT_L_PATH="/mnt/ceph_vol/models/sam_vit_l_0b3195.pth"
 SAM_VIT_B_PATH="/mnt/ceph_vol/models/sam_vit_b_01ec64.pth"
 UNI_VIT_L_PATH='/mnt/volume/mathias/pretrained_models/UNI.bin'
+OPTIMUS_PATH='/mnt/volume/mathias/pretrained_models/H-optimus-0.bin'
 CLIP_CKPTS_PATH = {
     'densenet':'',
     'uni-niche':'',
@@ -69,10 +71,13 @@ def get_models(modelnames):
             model = BeitModel(device)
         elif modelname.lower()=='uni':
             model = get_uni()
+        elif modelname.lower()=='optimus':
+            model = get_optimus()
         # elif modelname.lower()=='uni_cell':
         #     model = get_uni_cell()
         elif modelname.lower() in CLIP_CKPTS_PATH.keys():
-            model = clip_models(modelname, ckpt_path=Path(CLIP_CKPTS_PATH[modelname]))
+            #model = clip_models(modelname, ckpt_path=Path(CLIP_CKPTS_PATH[modelname]))
+            model = None
         """
         # torch.compile does not work with DataParallel
         if torch.cuda.device_count() > 1:
@@ -106,6 +111,12 @@ def get_models(modelnames):
 def get_uni():
     model = uni()
     pretrained = torch.load(UNI_VIT_L_PATH)
+    model.load_state_dict(pretrained, strict=True)
+    return model
+
+def get_optimus():
+    model = optimus()
+    pretrained = torch.load(OPTIMUS_PATH)
     model.load_state_dict(pretrained, strict=True)
     return model
 

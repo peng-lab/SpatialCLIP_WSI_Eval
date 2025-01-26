@@ -154,6 +154,13 @@ parser.add_argument(
     action='store_true',
 )
 
+parser.add_argument(
+    "--include_only",
+    help="Only considers slides with certain tring in filename",
+    type=str,
+    default=None,
+)
+
 
 
 def main(args):
@@ -510,6 +517,9 @@ def extract_features_from_patches(
     slide_dict = {}
     for file_path in file_paths:
         slide_name = file_path.parts[-3].split("_")[0]
+        
+        if args.include_only and not (args.include_only in slide_name):
+            continue
 
         if slide_name not in slide_dict:
             slide_dict[slide_name] = []
